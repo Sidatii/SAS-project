@@ -38,7 +38,7 @@ int temp = nb_produit;
     fflush(stdin);
     printf("Veuillez inserer le nom du produit: ");
     scanf("%s",&s[j].inf.nom);
-    printf("Veuillez inserer la quantite initiale:");
+    printf("Veuillez inserer la quantite initiale: ");
     scanf("%d",&s[j].inf.qty);
     fflush(stdin);
     printf("Veuillez inserer le prix unitaire: ");
@@ -50,9 +50,6 @@ int temp = nb_produit;
     printf("..................Votre produit est bien enregistre..................");
     }
 }
-
-
-
 
 void supprimer(){
 int del_num,del_code,index;
@@ -72,7 +69,7 @@ printf("Veuillez inserer le code du produit a supprimer n %d: ",i+1);
     }
     if(index != -1){
     for(j=index; j<nb_produit;j++)
-        s[i]= s[i+1];
+        s[j]= s[j+1];
         nb_produit--;
     }
 
@@ -94,12 +91,6 @@ void list_produits(){
 
 }
 
-
-
-
-
-
-///
 int main () {
 
     start1:
@@ -113,23 +104,24 @@ int main () {
     printf("________________________________\n");
     printf("1 : Ajouter un ou plusieurs produits \n");
     printf("2 : Supprimer un ou plusieurs produits\n");
-    printf("3 : Gestion de stock \n");
-    printf("4 : Etats de synthese \n");
-    printf("5 : Etat d inventaire \n");
+    printf("3 : Liste des produits \n");
+    printf("4 : Gestion vente/achat \n");
+    printf("5 : Etat d'inventaire \n");
     printf("6 : Quitter le program\n");
     printf("________________________________\n");
     printf("Veuillez saisir votre choix: ");
     scanf("%d",&choix);
 
-    while ((choix < 1 || choix >= 6) ||  (sscanf(check, "%d", &choix)==1)){
+    while ((choix < 1 || choix > 6) ||  (sscanf(check, "%d", &choix)==1)){
         fgets(check, 100, stdin);
         system("cls");
-        printf("Saisie invalid !!! \nVeuillez saisir un choix valid.\n ");
+        printf("Saisie invalid!!! \nVeuillez saisir un choix valid.\n ");
         goto start;
         }
 
 
     switch(choix){
+///Ajouter un ou plusieurs produits
         case 1:
             aj:
             system("cls");
@@ -155,6 +147,7 @@ int main () {
                     goto start1;
                     break;
                     }
+///Supprimer un ou plusieurs produits:
         case 2:
             supp:
             supprimer();
@@ -170,7 +163,7 @@ int main () {
                         case 3:
                             goto start1;
                     }
-
+///Liste des produits
         case 3: list:
             system("cls");
             list_produits();
@@ -185,6 +178,14 @@ int main () {
                         goto start1;
 
                 }
+///Gestion vente\achat
+        case 4:
+///Etat d'inventaire
+        case 5:
+///Quit program
+        case 6:
+            system("exit");
+
     }
 
 
@@ -192,15 +193,7 @@ int main () {
 
 
 
-///Ajouter un ou plusieurs produits:
 
-///Supprimer un ou plusieurs produits:
-
-///Gestion de stock:
-
-///Etats de synthese:
-
-///Etat d'inventaire
 
 
 
