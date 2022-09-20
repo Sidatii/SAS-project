@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
+
 int nb_produit = 0;
 int compteur = 0;
 int compteur1 =0;
@@ -141,11 +143,12 @@ for (j=0; j<nb_produit;j++)
 
 }
 
-void list_produits(){
+void Approvisionnement(){
 
     printf("Code\tNom\tQte\tPrix HT\t        Prix TTC\n");
     for (j=0; j<nb_produit;j++){
-    printf("\n%d \t %s \t %d \t %f \t %f\n",s[j].codee,s[j].inf.nom,s[j].inf.qty,s[j].inf.price,s[j].inf.price_TTC);
+            if(s[j].inf.qty<3)
+            printf("\n%d \t %s \t %d \t %f \t %f\n",s[j].codee,s[j].inf.nom,s[j].inf.qty,s[j].inf.price,s[j].inf.price_TTC);
     }
 
 }
@@ -206,12 +209,14 @@ for(i=0; i<n; i++){
     scanf("%d",&qte_code2);fflush(stdin);
     printf("Veuillez saisir la quantite a ajouter: ");
     scanf("%d",&qte_achetee);fflush(stdin);
-    for (j=0; j<nb_produit;j++){
-
-        for(int m=0; m<nb_produit;m++){
-            if(s[m].codee==qte_code2){
+    int m;
+    while (s[m].codee){
+            if(s[m].codee==qte_code2)
                 index=m;
-            }
+                break;
+
+        m++;
+    }
         s[index].inf.qty += qte_achetee;
         a[compteur1].codee = s[index].codee;
         strcpy(a[compteur1].info.nom,s[index].inf.nom);
@@ -224,31 +229,33 @@ for(i=0; i<n; i++){
         a[compteur1].info.dt.mois=tm.tm_mon + 1;
         a[compteur1].info.dt.annee=tm.tm_year + 1900;
         compteur1++;
-        }
-    }
+}
     printf("..................L'operation est enregistree.................\n\n");
 
-}
+
 printf("..................journal des achats..................\n\n");
 printf("Code\tNom\tQte\tPrix HT\t        Prix TTC\t        Date operation\n");
 for (int k=0; k<compteur1;k++)
     printf("\n%d\t%s\t%d\t%f\t%f\t%d/%d/%d\n",a[k].codee,a[k].info.nom,a[k].info.qty,a[k].info.prix_TTC,a[k].info.Total,a[k].info.dt.jour,a[k].info.dt.mois,a[k].info.dt.annee);
 
+
 }
 
 void Ascendant_par_nom(){
 
-for(j=0; j<nb_produit-1;j++){
-    for(i=1; i<nb_produit;i++){
-        if(strcmp(s[j].inf.nom,s[i].inf.nom)==0){
-            products temp = s[i];
-            s[i] = s[j];
-            s[j] = temp;
+    for(int i=0;i<nb_produit-1;i++){
+        for(int j=i+1;j<nb_produit;j++){
+            if(strcmp(s[i].inf.nom,s[j].inf.nom)==1){
+                products temp;
+                temp = s[i];
+                s[i] = s[j];
+                s[j] = temp;
+            }
         }
     }
-}
-printf("Votre nouvelle liste s'affiche comme suit: \n\n");
-printf("Code\tNom\tQte\tPrix HT\t  Prix TTC");
+
+printf("...........................[List des produit triee ascendante par nom]...........................\n\n");
+printf("Code\tNom\tQte\tPrix HT\t     Prix TTC");
 for (int k=0; k<nb_produit;k++)
     printf("\n%d \t %s \t %d \t %f \t %f\n",s[k].codee,s[k].inf.nom,s[k].inf.qty,s[k].inf.price,s[k].inf.price_TTC);
 
@@ -256,24 +263,26 @@ for (int k=0; k<nb_produit;k++)
 
 void Descendant_par_prix(){
 
-for(j=0; j<nb_produit-1;j++){
-    for(i=1; i<nb_produit;i++){
-        if(s[j].inf.price < s[i].inf.price){
-            products temp = s[i];
-            s[i] = s[j];
-            s[j] = temp;
-    }
-    }
+for(int i=0;i<nb_produit-1;i++){
+        for(int j=i+1;j<nb_produit;j++){
+            if(s[i].inf.price<s[j].inf.price){
+                products temp1;
+                temp1 = s[i];
+                s[i] = s[j];
+                s[j] = temp1;
+            }
+        }
 }
-printf("Votre nouvelle liste s'affiche comme suit: \n\n");
-printf("Code\tNom\tQte\tPrix HT\t  Prix TTC");
+printf("...........................[List des produit triee descendante par prix]...........................\n\n");
+printf("Code\tNom\tQte\tPrix HT\t     Prix TTC");
 for (int k=0; k<nb_produit;k++)
     printf("\n%d \t %s \t %d \t %f \t %f\n",s[k].codee,s[k].inf.nom,s[k].inf.qty,s[k].inf.price,s[k].inf.price_TTC);
 
 }
 
 void Journal_ventes(){
-    printf("\nCode\tNom\tQte\tPrix\t   Total TTC\t   Date operation\n");
+    printf("...........................[Journal des ventes]...........................\n\n");
+    printf("\nCode\tNom\tQte\tPrix\t      Total TTC\t    Date operation\n");
     for (j=0; j<compteur;j++){
     printf("\n%d\t%s\t%d\t%f\t%f\t%d/%d/%d\n",t[j].codee,t[j].inf.nom,t[j].inf.qty,t[j].inf.prix,t[j].inf.Total_TTC,t[j].inf.d.jour,t[j].inf.d.mois,t[j].inf.d.annee);
     }
@@ -281,37 +290,58 @@ void Journal_ventes(){
 }
 
 void Journal_achats(){
-    printf("\nCode\tNom\tQte\tPrix TTC\t     Total\t     Date operation\n");
+    printf("...........................[Journal des achats]...........................\n\n");
+    printf("\nCode\tNom\tQte\tPrix TTC\t      Total\t     Date operation\n");
     for (i=0; i<compteur1;i++){
     printf("\n%d\t%s\t%d\t%f\t%f\t%d/%d/%d\n",a[i].codee,a[i].info.nom,a[i].info.qty,a[i].info.prix_TTC,a[i].info.Total,a[i].info.dt.jour,a[i].info.dt.mois,a[i].info.dt.annee);
     }
 
 }
 
+void recherche(){
+
+printf("..............................Rechercher un produit.............................."
+       ".................................................................................\n");
+        int recherche_code;
+        printf("Veuillez saisir le code du produit a rechercher: ");
+        scanf("%d",&recherche_code);fflush(stdin);
+        int m, index;
+        for(m=0;m<nb_produit;m++){
+            if(s[m].codee==recherche_code)
+                break;
+        m++;
+        }
+    if(m<nb_produit)
+        printf("\n\nDesole!!! Le code recherche n existe pas dans la list des produits\n\n");
+    else
+    printf("\n\n%d\t%s\t%d\t%f\n\n",s[m].codee,s[m].inf.nom,s[m].inf.qty,s[m].inf.price);
+}
+///>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 int main () {
 
     start1:
-    printf("*******************************************************************************************************************\n");
-    printf("                           ||      The NOUHI Pharmacy management system         ||\n");
-    printf("                           ||  Your application to better manage your pharmacy  ||\n");
-    printf("*******************************************************************************************************************\n\n");
-    printf("\033[0;36mBienvenue!! Que est ce que vous voulez faire?\033[0m\n\n");
+    printf("*******************************************************************************************************************\n"
+           "                           ||      The NOUHI Pharmacy management system         ||\n"
+           "                           ||  Your application to better manage your pharmacy  ||\n"
+           "*******************************************************************************************************************\n\n");
+
+    printf("Bienvenue!! Que est ce que vous voulez faire?\n\n");
     invalid:
-    printf("|********************************************|\n");
-    printf("|1 : Ajouter un ou plusieurs produits        |\n");
-    printf("|--------------------------------------------|\n");
-    printf("|2 : Supprimer un ou plusieurs produits      |\n");
-    printf("|--------------------------------------------|\n");
-    printf("|3 : Liste des produits                      |\n");
-    printf("|--------------------------------------------|\n");
-    printf("|4 : Gestion des Vente                       |\n");
-    printf("|--------------------------------------------|\n");
-    printf("|5 : Gestion des Achat                       |\n");
-    printf("|--------------------------------------------|\n");
-    printf("|6 : Etat d'inventaire                       |\n");
-    printf("|--------------------------------------------|\n");
-    printf("|7 : Quitter le program                      |\n");
-    printf("|********************************************|\n");
+    printf("||------------------------------------------->\n"
+           "|| 1] Ajouter un ou plusieurs produits       |\n"
+           "||------------------------------------------->\n"
+           "|| 2] Supprimer un ou plusieurs produits     |\n"
+           "||------------------------------------------->\n"
+           "|| 3] Etat de stock                          |\n"
+           "||------------------------------------------->\n"
+           "|| 4] Gestion des Vente                      |\n"
+           "||------------------------------------------->\n"
+           "|| 5] Gestion des Achat                      |\n"
+           "||------------------------------------------->\n"
+           "|| 6] Statistique Ventes/Achats              |\n"
+           "||------------------------------------------->\n"
+           "|| 7] Quitter le program                     |\n"
+           "||------------------------------------------->\n");
     printf("Veuillez saisir votre choix: ");
     scanf("%d",&choix);
 
@@ -322,30 +352,21 @@ int main () {
         goto invalid;
         }
 
-
+///#########################################################################################################################################################################
     switch(choix){
 ///Ajouter un ou plusieurs produits
         case 1:
             aj:
             system("cls");
             ajoute();
-            printf("\n1. Afficher la liste des produits\n2. Retour au menu principale\n");
-            printf("-------> ");
+            printf("\n1. Afficher la liste des produits\n2. Retour au menu principale\n"
+                   "-------> ");
             scanf("%d",&choix);
             system("cls");
             switch (choix){
                 case 1:
-                    list_produits();
-                    printf("\n1. Ajouter un ou plusieurs produits\n2. Supprimer un ou plusieurs produits\n3. Retour au menu principale\n");
-                    printf("-------> ");
-                    scanf("%d",&choix);
                     system("cls");
-                        switch(choix){
-                            case 1: goto aj;
-                            case 2: goto supp;
-                            default: goto start1;
-                            }
-
+                    goto list_des_produit;
                 case 2:
                     goto start1;
                     }
@@ -353,8 +374,8 @@ int main () {
         case 2:
             supp:
             supprimer();
-            printf("\n1. Ajouter un ou plusieurs produits\n2. Supprimer un ou plusieurs produits\n3. Retour au menu principale\n");
-            printf("-------> ");
+            printf("\n1. Ajouter un ou plusieurs produits\n2. Supprimer un ou plusieurs produits\n3. Retour au menu principale\n"
+                   "-------> ");
             scanf("%d",&choix);
             system("cls");
                     switch(choix){
@@ -366,15 +387,33 @@ int main () {
                             goto start1;
                     }
 ///Liste des produits
-        case 3:
-            printf("\n1. Afficher la list des produits\n2. Afficher la list triee ascendante par nom\n3. Afficher la list triee descendante par prix\n4. Retour au menu principale\n");
+        case 3: //Ici on donne le choix a l'utilisateur pour choisir sa direction.
+            list_des_produit:
+            system("cls");
+            printf("\n1. Rechercher un produit\n2. Approvisionnement du stock\n3. Afficher la list triee ascendante par nom\n4. Afficher la list triee descendante par prix\n5. Retour au menu principale\n");
             printf("-------> ");
             scanf("%d",&choix);
             switch (choix){
-                case 1:
+                case 1: //La recherche d'un produit par code -----------------------------------------------
+                    rech:
+                    system("cls");
+                    recherche();
+                    printf("\n1. Rechercher un autre produit?\n2. Retour au menu principale\n");
+                    printf("-------> ");
+                    scanf("%d",&choix);
+                    system("cls");
+                        switch (choix){
+                            case 1:
+                                goto rech;
+                            default:
+                                goto start1;
+                            }
+                //---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                case 2: // l'approvisionnement des produits ---------------------------------------------------------------------------------------------------------------
                     list:
                     system("cls");
-                    list_produits();
+                    Approvisionnement();
                     printf("\n1. Ajouter un ou plusieurs produits\n2. Supprimer un ou plusieurs produits\n3. Retour au menu principale\n");
                     printf("-------> ");
                     scanf("%d",&choix);
@@ -387,8 +426,9 @@ int main () {
                             default:
                                 goto start1;
                             }
+                //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                case 2:
+                case 3: //L'affichage ascendant des produit par nom -------------------------------------------------------------------------------------------------------
                     system("cls");
                     Ascendant_par_nom();
                     printf("\n1. Ajouter un ou plusieurs produits\n2. Supprimer un ou plusieurs produits\n3. Retour au menu principale\n");
@@ -403,7 +443,9 @@ int main () {
                             default:
                                 goto start1;
                             }
-                case 3:
+                //---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                case 4: // L'affichage descendant des produit par prix ----------------------------------------------------------------------------------------------------
                     system("cls");
                     Descendant_par_prix();
                     printf("\n1. Ajouter un ou plusieurs produits\n2. Supprimer un ou plusieurs produits\n3. Retour au menu principale\n");
@@ -418,13 +460,15 @@ int main () {
                             default:
                                 goto start1;
                             }
+                //---------------------------------------------------------------------------------------------------------------------------------------------------------
                 default:
+                    goto start1;
                     system("cls");
-                    Ascendant_par_nom();
-
             }
+///*************************************************************************************************************************************************************************
 ///Gestion vente
         case 4:
+            system("cls");
             printf("\n1. Enregistrer une ou plusieurs operations vente\n2. Afficher le journal des ventes\n3. Retour au menu principale\n");
             printf("-------> ");
             scanf("%d",&choix);
@@ -434,6 +478,7 @@ int main () {
                 ///Enregistrement des ventes
                 case 1:
                     ventes:
+                    system("cls");
                     Enregistrement_ventes();
                     printf("\n1. Enregistrer une ou plusieurs operations vente\n2. Afficher le journal des ventes\n4. Retour au menu principale\n");
                     printf("-------> ");
@@ -450,6 +495,7 @@ int main () {
                 ///Journal des ventes
                 case 2:
                     journal_vte:
+                    system("cls");
                     Journal_ventes();
                     printf("\n1. Enregistrer une ou plusieurs operations vente\n2. Retour au menu principale\n");
                     printf("-------> ");
@@ -463,10 +509,13 @@ int main () {
                         }
                 ///Menu principale
                 default:
+                    system("cls");
                     goto start1;
             }
+///*************************************************************************************************************************************************************************
 ///Gestion achats
         case 5:
+            system("cls");
             printf("\n1. Alimenter le stock d un ou plusieurs produit\n2. Afficher le journal des achats\n3. Retour au menu principale\n");
             printf("-------> ");
             scanf("%d",&choix);
@@ -475,6 +524,7 @@ int main () {
                 ///Enregistrement des achats
                 case 1:
                     achats:
+                    system("cls");
                     Enregistrement_achats();
                     printf("\n1. Alimenter le stock d un ou plusieurs produit\n2. Afficher le journal des achats\n3. Retour au menu principale\n");
                     printf("-------> ");
@@ -491,6 +541,7 @@ int main () {
                 ///Journal des achats
                 case 2:
                     journal_ach:
+                    system("cls");
                     Journal_achats();
                     printf("\n1. Alimenter le stock d un ou plusieurs produit\n2. Retour au menu principale\n");
                     printf("-------> ");
@@ -505,16 +556,22 @@ int main () {
                 ///Menu principale
                 default:
                     goto start1;
+                    system("cls");
             }
+///*************************************************************************************************************************************************************************
 ///Etat d'inventaire
         case 6:
+///*************************************************************************************************************************************************************************
 ///Quit program
         case 7:
+            printf(".....................................................................................\n"
+                   "                                  ||  Au revoir  ||                                  \n"
+                   ".....................................................................................\n");
             system("exit");
+///*************************************************************************************************************************************************************************
 
+///#########################################################################################################################################################################
     }
-
 return 0;
-
 }
-
+///>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
