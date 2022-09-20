@@ -165,7 +165,9 @@ end:
 
 void Approvisionnement(){
 
+    printf("\33[0;36m");
     printf("Code\tNom\tQte\tPrix HT\t        Prix TTC\n");
+    printf("\033[0m");
     for (j=0; j<nb_produit;j++){
             if(s[j].inf.qty<3)
             printf("\n%d \t %s \t %d \t %f \t %f\n",s[j].codee,s[j].inf.nom,s[j].inf.qty,s[j].inf.price,s[j].inf.price_TTC);
@@ -303,7 +305,9 @@ void Ascendant_par_nom(){
     }
 
 printf("...........................[List des produit triee ascendante par nom]...........................\n\n");
+printf("\33[0;36m");
 printf("Code\tNom\tQte\tPrix HT\t     Prix TTC");
+printf("\033[0m");
 for (int k=0; k<nb_produit;k++)
     printf("\n%d \t %s \t %d \t %f \t %f\n",s[k].codee,s[k].inf.nom,s[k].inf.qty,s[k].inf.price,s[k].inf.price_TTC);
 
@@ -322,7 +326,9 @@ for(int i=0;i<nb_produit-1;i++){
         }
 }
 printf("...........................[List des produit triee descendante par prix]...........................\n\n");
+printf("\33[0;36m");
 printf("Code\tNom\tQte\tPrix HT\t     Prix TTC");
+printf("\033[0m");
 for (int k=0; k<nb_produit;k++)
     printf("\n%d \t %s \t %d \t %f \t %f\n",s[k].codee,s[k].inf.nom,s[k].inf.qty,s[k].inf.price,s[k].inf.price_TTC);
 
@@ -330,7 +336,9 @@ for (int k=0; k<nb_produit;k++)
 
 void Journal_ventes(){
     printf("...........................[Journal des ventes]...........................\n\n");
+    printf("\33[0;36m");
     printf("\nCode\tNom\tQte\tPrix\t      Total TTC\t    Date operation\n");
+    printf("\033[0m");
     for (j=0; j<compteur;j++){
     printf("\n%d\t%s\t%d\t%f\t%f\t%d/%d/%d\n",t[j].codee,t[j].inf.nom,t[j].inf.qty,t[j].inf.prix,t[j].inf.Total_TTC,t[j].inf.d.jour,t[j].inf.d.mois,t[j].inf.d.annee);
     }
@@ -339,7 +347,9 @@ void Journal_ventes(){
 
 void Journal_achats(){
     printf("...........................[Journal des achats]...........................\n\n");
+    printf("\33[0;36m");
     printf("\nCode\tNom\tQte\tPrix TTC\t      Total\t     Date operation\n");
+    printf("\033[0m");
     for (i=0; i<compteur1;i++){
     printf("\n%d\t%s\t%d\t%f\t%f\t%d/%d/%d\n",a[i].codee,a[i].info.nom,a[i].info.qty,a[i].info.prix_TTC,a[i].info.Total,a[i].info.dt.jour,a[i].info.dt.mois,a[i].info.dt.annee);
     }
@@ -481,6 +491,7 @@ int main () {
             printf("\n1. Rechercher un produit\n2. Approvisionnement du stock\n3. Afficher la list triee ascendante par nom\n4. Afficher la list triee descendante par prix\n5. Retour au menu principale\n");
             printf("-------> ");
             scanf("%d",&choix);
+            system("cls");
             switch (choix){
                 //----------------------------------------------------------------------------------------------------------------------------------------------------------
                 case 1: //La recherche d'un produit par code ----------------------------------------------------------------------------------------------------------------
