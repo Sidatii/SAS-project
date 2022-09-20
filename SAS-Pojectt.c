@@ -302,19 +302,46 @@ void recherche(){
 
 printf("..............................Rechercher un produit.............................."
        ".................................................................................\n");
-        int recherche_code;
-        printf("Veuillez saisir le code du produit a rechercher: ");
-        scanf("%d",&recherche_code);fflush(stdin);
-        int m, index;
-        for(m=0;m<nb_produit;m++){
-            if(s[m].codee==recherche_code)
+        int choix;
+        printf("\n1. Recherche par Code produit\n2. Recherche par Quantite produit\n\nVeuillez saisir votre choix: ");
+        scanf("%d", &choix);
+        int recherche;
+        switch(choix){
+            case 1:
+                printf("Veuillez saisir le code du produit a rechercher: ");
+                scanf("%d",&recherche);fflush(stdin);
+                int m, index;
+                for(m=0;m<nb_produit;m++){
+                    if(s[m].codee==recherche)
+                        break;
+                        m++;
+                }
+                if(m>nb_produit)
+                printf("\n\n\a\033[0;31mDesole!!! Le code recherche n existe pas dans la list des produits\033[0m\n\n");
+                else
+                printf("\n\n%d\t%s\t%d\t%f\n\n",s[m].codee,s[m].inf.nom,s[m].inf.qty,s[m].inf.price);
                 break;
-        m++;
+            case 2:
+                printf("Veuillez saisir la quantite du produit a rechercher: ");
+                scanf("%d",&recherche);fflush(stdin);
+                for(m=0;m<nb_produit;m++){
+                    if(s[m].inf.qty==recherche)
+                        break;
+                        m++;
+                }
+                if(m>nb_produit)
+                printf("\n\n\a\033[0;31mDesole!!! La quantite recherchee n existe pas dans la list des produits\033[0m\n\n");
+                else
+                printf("\n\n%d\t%s\t%d\t%f\n\n",s[m].codee,s[m].inf.nom,s[m].inf.qty,s[m].inf.price);
+                break;
         }
-    if(m<nb_produit)
-        printf("\n\nDesole!!! Le code recherche n existe pas dans la list des produits\n\n");
-    else
-    printf("\n\n%d\t%s\t%d\t%f\n\n",s[m].codee,s[m].inf.nom,s[m].inf.qty,s[m].inf.price);
+}
+
+void stats_ventes(){
+
+
+
+
 }
 ///>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 int main () {
