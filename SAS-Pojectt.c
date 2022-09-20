@@ -238,13 +238,14 @@ for (int k=0; k<compteur1;k++)
 
 void Ascendant_par_nom(){
 
-for(i=0; i<nb_produit;i++){
-    if(strcmp(s[i].inf.nom,s[i+1].inf.nom)==1){
-        products temp = s[i];
-        s[i] = s[i+1];
-        s[i+1] = temp;
+for(j=0; j<nb_produit-1;j++){
+    for(i=1; i<nb_produit;i++){
+        if(strcmp(s[j].inf.nom,s[i].inf.nom)==0){
+            products temp = s[i];
+            s[i] = s[j];
+            s[j] = temp;
+        }
     }
-
 }
 printf("Votre nouvelle liste s'affiche comme suit: \n\n");
 printf("Code\tNom\tQte\tPrix HT\t  Prix TTC");
@@ -253,15 +254,16 @@ for (int k=0; k<nb_produit;k++)
 
 }
 
-void Descendant_par_nom(){
+void Descendant_par_prix(){
 
-for(i=0; i<nb_produit;i++){
-    if(s[i].inf.price < s[i+1].inf.price){
-        products temp = s[i];
-        s[i] = s[i+1];
-        s[i+1] = temp;
+for(j=0; j<nb_produit-1;j++){
+    for(i=1; i<nb_produit;i++){
+        if(s[j].inf.price < s[i].inf.price){
+            products temp = s[i];
+            s[i] = s[j];
+            s[j] = temp;
     }
-
+    }
 }
 printf("Votre nouvelle liste s'affiche comme suit: \n\n");
 printf("Code\tNom\tQte\tPrix HT\t  Prix TTC");
@@ -302,16 +304,18 @@ int main () {
     printf("|--------------------------------------------|\n");
     printf("|3 : Liste des produits                      |\n");
     printf("|--------------------------------------------|\n");
-    printf("|4 : Gestion vente/achat                     |\n");
+    printf("|4 : Gestion des Vente                       |\n");
     printf("|--------------------------------------------|\n");
-    printf("|5 : Etat d'inventaire                       |\n");
+    printf("|5 : Gestion des Achat                       |\n");
     printf("|--------------------------------------------|\n");
-    printf("|6 : Quitter le program                      |\n");
+    printf("|6 : Etat d'inventaire                       |\n");
+    printf("|--------------------------------------------|\n");
+    printf("|7 : Quitter le program                      |\n");
     printf("|********************************************|\n");
     printf("Veuillez saisir votre choix: ");
     scanf("%d",&choix);
 
-    while ((choix < 1 || choix > 6) ||  (sscanf(check, "%d", &choix)==1)){
+    while ((choix < 1 || choix > 7) ||  (sscanf(check, "%d", &choix)==1)){
         fgets(check, 100, stdin);
         system("cls");
         printf("\a\033[0;41mSaisie invalid!!!\033[0m \nVeuillez saisir un choix valid.\n");
@@ -400,7 +404,7 @@ int main () {
                                 goto start1;
                             }
                 case 3:
-                    /*system("cls");
+                    system("cls");
                     Descendant_par_prix();
                     printf("\n1. Ajouter un ou plusieurs produits\n2. Supprimer un ou plusieurs produits\n3. Retour au menu principale\n");
                     printf("-------> ");
@@ -413,17 +417,15 @@ int main () {
                                 goto supp;
                             default:
                                 goto start1;
-                            }*/
+                            }
                 default:
                     system("cls");
                     Ascendant_par_nom();
 
-
-
             }
-///Gestion vente\achat
+///Gestion vente
         case 4:
-            printf("\n1. Enregistrer une ou plusieurs operations vente\n2. Alimenter le stock d un ou plusieurs produit\n3. Afficher le journal des ventes\n4. Afficher le journal des achats\n5. Retour au menu principale\n");
+            printf("\n1. Enregistrer une ou plusieurs operations vente\n2. Afficher le journal des ventes\n3. Retour au menu principale\n");
             printf("-------> ");
             scanf("%d",&choix);
             system("cls");
@@ -445,8 +447,33 @@ int main () {
                             default:
                                 goto start1;
                         }
-                ///Enregistrement des achats
+                ///Journal des ventes
                 case 2:
+                    journal_vte:
+                    Journal_ventes();
+                    printf("\n1. Enregistrer une ou plusieurs operations vente\n2. Retour au menu principale\n");
+                    printf("-------> ");
+                    scanf("%d",&choix);
+                    system("cls");
+                        switch (choix){
+                            case 1:
+                                goto ventes;
+                            default:
+                                goto start1;
+                        }
+                ///Menu principale
+                default:
+                    goto start1;
+            }
+///Gestion achats
+        case 5:
+            printf("\n1. Alimenter le stock d un ou plusieurs produit\n2. Afficher le journal des achats\n3. Retour au menu principale\n");
+            printf("-------> ");
+            scanf("%d",&choix);
+            system("cls");
+            switch(choix){
+                ///Enregistrement des achats
+                case 1:
                     achats:
                     Enregistrement_achats();
                     printf("\n1. Alimenter le stock d un ou plusieurs produit\n2. Afficher le journal des achats\n3. Retour au menu principale\n");
@@ -460,25 +487,9 @@ int main () {
                                 goto journal_ach;
                             default:
                                 goto start1;
-
-
-                        }
-                ///Journal des ventes
-                case 3:
-                    journal_vte:
-                    Journal_ventes();
-                    printf("\n1. Enregistrer une ou plusieurs operations vente\n2. Retour au menu principale\n");
-                    printf("-------> ");
-                    scanf("%d",&choix);
-                    system("cls");
-                        switch (choix){
-                            case 1:
-                                goto ventes;
-                            default:
-                                goto start1;
                         }
                 ///Journal des achats
-                case 4:
+                case 2:
                     journal_ach:
                     Journal_achats();
                     printf("\n1. Alimenter le stock d un ou plusieurs produit\n2. Retour au menu principale\n");
@@ -496,9 +507,9 @@ int main () {
                     goto start1;
             }
 ///Etat d'inventaire
-        case 5:
-///Quit program
         case 6:
+///Quit program
+        case 7:
             system("exit");
 
     }
