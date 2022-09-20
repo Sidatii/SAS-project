@@ -162,14 +162,26 @@ printf("Veuillez saisir le nombre des produits vendus: ");
 scanf("%d", &n);
 
 for(i=0; i<n; i++){
+        begin:
     printf("Veuillez saisir le code du produit vendu n %d: ",i+1);
     scanf("%d",&code_code);fflush(stdin);
     printf("Veuillez saisir la quantite vendue: ");
     scanf("%d",&qte_vendue);fflush(stdin);
-
         for(int m=0; m<nb_produit;m++)
             if(s[m].codee==code_code){
                 index=m;
+                if(qte_vendue>s[m].inf.qty){
+                    system("cls");
+                    printf("L etat de stock du produit ne peut pas satisfaire la quantitee saisie!!\n\n");
+                    goto begin;
+                }
+                else break;
+            }
+        printf("Voulez-vous vraiment effectuer cette operation?\n1. No  || 2. YES\n\n");
+        scanf("%d", &n);
+            switch(n){
+                case 1: goto end;
+                default: break;
             }
         s[index].inf.qty -= qte_vendue;
         t[compteur].codee = s[index].codee;
@@ -193,7 +205,7 @@ printf("..................journal des ventes..................\n\n");
 printf("Code\tNom\tQte\tPrix HT\t        Total TTC\t        Date operation");
 for (int k=0; k<compteur;k++)
     printf("\n%d\t%s\t%d\t%f\t%f\t%d/%d/%d\n",t[k].codee,t[k].inf.nom,t[k].inf.qty,t[k].inf.prix,t[k].inf.Total_TTC,t[k].inf.d.jour,t[k].inf.d.mois,t[k].inf.d.annee);
-
+end:
 }
 
 void Enregistrement_achats(){
@@ -210,13 +222,16 @@ for(i=0; i<n; i++){
     printf("Veuillez saisir la quantite a ajouter: ");
     scanf("%d",&qte_achetee);fflush(stdin);
     int m;
-    while (s[m].codee){
-            if(s[m].codee==qte_code2)
+    for(int m=0; m<nb_produit;m++)
+            if(s[m].codee==qte_code2){
                 index=m;
-                break;
-
-        m++;
-    }
+            }
+        printf("Voulez-vous vraiment effectuer cette operation?\n1. No  || 2. YES\n\n");
+        scanf("%d", &n);
+            switch(n){
+                case 1: goto end;
+                default: break;
+            }
         s[index].inf.qty += qte_achetee;
         a[compteur1].codee = s[index].codee;
         strcpy(a[compteur1].info.nom,s[index].inf.nom);
@@ -230,15 +245,15 @@ for(i=0; i<n; i++){
         a[compteur1].info.dt.annee=tm.tm_year + 1900;
         compteur1++;
 }
+
     printf("..................L'operation est enregistree.................\n\n");
 
-
-printf("..................journal des achats..................\n\n");
-printf("Code\tNom\tQte\tPrix HT\t        Prix TTC\t        Date operation\n");
-for (int k=0; k<compteur1;k++)
+    printf("..................journal des achats..................\n\n");
+    printf("Code\tNom\tQte\tPrix HT\t        Prix TTC\t        Date operation\n");
+    for (int k=0; k<compteur1;k++)
     printf("\n%d\t%s\t%d\t%f\t%f\t%d/%d/%d\n",a[k].codee,a[k].info.nom,a[k].info.qty,a[k].info.prix_TTC,a[k].info.Total,a[k].info.dt.jour,a[k].info.dt.mois,a[k].info.dt.annee);
 
-
+end:
 }
 
 void Ascendant_par_nom(){
