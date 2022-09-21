@@ -119,7 +119,8 @@ printf("Veuillez saisir les infos de votre produit: ");
 }
 
 int supprimer(){
-int del_num,del_code,index;
+int del_num,del_code;
+int index = -1;
 int n;
 start:
 system("cls");
@@ -132,7 +133,6 @@ scanf("%d", &n);
         scanf("%d", &x);
             if(x==1) return 0;
 //------------------------------------------------------------------------------------
-
 for(i=0; i<n; i++){
 printf("Veuillez inserer le code du produit a supprimer n %d: ",i+1);
     scanf("%d",&del_code);fflush(stdin);
@@ -150,7 +150,7 @@ printf("Veuillez inserer le code du produit a supprimer n %d: ",i+1);
     printf("..................Votre produit est supprime..................\n\n");
     }
 }
-printf("Votre nouvelle liste s'affiche comme suit: \n");
+printf("Votre nouvelle liste: \n");
 for (j=0; j<nb_produit;j++)
     printf("\n%d \t %s \t %d \t %f \t %f\n",s[j].codee,s[j].inf.nom,s[j].inf.qty,s[j].inf.price,s[j].inf.price_TTC);
 }
@@ -167,7 +167,7 @@ void Approvisionnement(){
 
 }
 
-void Enregistrement_ventes(){
+int Enregistrement_ventes(){
 
 int code_code,qte_vendue,index;
 int n;
@@ -239,7 +239,7 @@ for (int k=0; k<compteur;k++)
     printf("\n%d\t%s\t%d\t%f\t%f\t%d/%d/%d\n",t[k].codee,t[k].inf.nom,t[k].inf.qty,t[k].inf.prix,t[k].inf.Total_TTC,t[k].inf.d.jour,t[k].inf.d.mois,t[k].inf.d.annee);
 }
 
-void Enregistrement_achats(){
+int Enregistrement_achats(){
 
 int qte_code2,qte_achetee,index;
 int n;
@@ -291,16 +291,16 @@ for(i=0; i<n; i++){
 
 void Ascendant_par_nom(){
 
-    for(int i=0;i<nb_produit-1;i++){
-        for(int j=i+1;j<nb_produit;j++){
-            if(strcmp(s[i].inf.nom,s[j].inf.nom)==1){
-                products temp;
-                temp = s[i];
-                s[i] = s[j];
-                s[j] = temp;
-            }
+for(int i=0;i<nb_produit-1;i++){
+    for(int j=i+1;j<nb_produit;j++){
+        if(strcmp(s[i].inf.nom,s[j].inf.nom)==1){
+            products temp;
+            temp = s[i];
+            s[i] = s[j];
+            s[j] = temp;
         }
     }
+}
 
 printf("...........................[List des produit triee ascendante par nom]...........................\n\n");
 printf("\33[0;36m");
@@ -364,28 +364,30 @@ printf("..............................Rechercher un produit.....................
         int recherche;
         switch(choix){
             case 1:
+                int index01 = -1;
                 printf("Veuillez saisir le code du produit a rechercher: ");
                 scanf("%d",&recherche);fflush(stdin);
                 int m, index;
                 for(m=0;m<nb_produit;m++){
                     if(s[m].codee==recherche)
+                        index01= m;
                         break;
-                        m++;
                 }
-                if(m>nb_produit)
+                if(index01 == -1)
                 printf("\n\n\a\033[0;31mDesole!!! Le code recherche n existe pas dans la list des produits\033[0m\n\n");
                 else
                 printf("\n\n%d\t%s\t%d\t%f\n\n",s[m].codee,s[m].inf.nom,s[m].inf.qty,s[m].inf.price);
                 break;
             case 2:
+                int index02 = -1;
                 printf("Veuillez saisir la quantite du produit a rechercher: ");
                 scanf("%d",&recherche);fflush(stdin);
                 for(m=0;m<nb_produit;m++){
                     if(s[m].inf.qty==recherche)
+                        index02= m;
                         break;
-                        m++;
                 }
-                if(m>nb_produit)
+                if(index01 == -1)
                 printf("\n\n\a\033[0;31mDesole!!! La quantite recherchee n existe pas dans la list des produits\033[0m\n\n");
                 else
                 printf("\n\n%d\t%s\t%d\t%f\n\n",s[m].codee,s[m].inf.nom,s[m].inf.qty,s[m].inf.price);
@@ -414,7 +416,6 @@ void stats_ventes(){
             if(t[i].inf.Total_TTC>max_vte){
                 max_vte=t[i].inf.Total_TTC;
                 index = i;
-                break;
             }
         }
 
@@ -436,10 +437,56 @@ void stats_ventes(){
     printf("Le produit avec le chiffre d affaire le plus grand:\n");
     printf("\n%d\t%s\t%f Dh\t%d/%d/%d\n\n",t[index].codee,t[index].inf.nom,t[index].inf.Total_TTC,t[index].inf.d.jour,t[index].inf.d.mois,t[index].inf.d.annee);
     printf("Le produit avec le chiffre d affaire le plus bas:\n");
-    printf("\n%d\t%s\t%f Dh\t%d/%d/%d\n\n",t[index1].codee,t[index1].inf.nom,t[index].inf.Total_TTC,t[index].inf.d.jour,t[index].inf.d.mois,t[index].inf.d.annee);
+    printf("\n%d\t%s\t%f Dh\t%d/%d/%d\n\n",t[index1].codee,t[index1].inf.nom,t[index1].inf.Total_TTC,t[index1].inf.d.jour,t[index1].inf.d.mois,t[index1].inf.d.annee);
 }
 
 
+void stats_achats(){
+
+    float chiffre_affaire_ach = 0;
+    time_t h2 = time(NULL);
+    struct tm tm = *localtime(&h2);
+    //La somme des ventes journaliers
+    for(i=0; i<compteur1; i++){
+        if(a[i].info.dt.jour==tm.tm_mday && a[i].info.dt.mois==tm.tm_mon + 1 && (a[i].info.dt.annee==tm.tm_year + 1900)){
+            chiffre_affaire_ach += a[i].info.Total;}
+    }
+    //La moyenne des ventes
+    float moyenne_ach;
+    moyenne_ach = chiffre_affaire_ach/compteur1;
+
+    float max_ach;
+    int index;
+    max_ach= a[0].info.Total;
+    for (int i=1 ; i<compteur1 ; i++){
+        if(a[i].info.dt.jour==tm.tm_mday && a[i].info.dt.mois==tm.tm_mon + 1 && a[i].info.dt.annee==tm.tm_year + 1900){
+            if(a[i].info.Total>max_ach){
+                max_ach=a[i].info.Total;
+                index = i;
+            }
+        }
+
+    }
+    float min_ach;
+    int index1;
+    min_ach=a[0].info.Total;
+
+    for (int i=1 ; i<compteur1 ; i++){
+        if(a[i].info.dt.jour==tm.tm_mday && a[i].info.dt.mois==tm.tm_mon + 1 && a[i].info.dt.annee==tm.tm_year + 1900){
+            if(a[i].info.Total<min_ach){
+                min_ach=a[i].info.Total;
+                index1 = i;
+            }
+        }
+
+    }
+
+    printf("Chiffre d affaire journalier: %f Dh\n\nMoyenne vente journaliere: %f Dh\n\n", chiffre_affaire_ach,moyenne_ach);
+    printf("Le produit avec le chiffre d affaire le plus grand:\n");
+    printf("\n%d\t%s\t%f Dh\t%d/%d/%d\n\n",a[index].codee,a[index].info.nom,a[index].info.Total,a[index].info.dt.jour,a[index].info.dt.mois,a[index].info.dt.annee);
+    printf("Le produit avec le chiffre d affaire le plus bas:\n");
+    printf("\n%d\t%s\t%f Dh\t%d/%d/%d\n\n",a[index1].codee,a[index1].info.nom,a[index1].info.Total,a[index1].info.dt.jour,a[index1].info.dt.mois,a[index1].info.dt.annee);
+}
 void red_bg (){
   printf("\033[1;41m");
 }
@@ -701,6 +748,16 @@ int main () {
             switch(choix){
                 case 1:
                     stats_ventes();
+                    printf("\n1. Retour au menu principale\n");
+                    printf("-------> ");
+                    scanf("%d",&choix);
+                    system("cls");
+                        switch(choix){
+                            default:
+                                goto start1;
+                        }
+                case 2:
+                    stats_achats();
                     printf("\n1. Retour au menu principale\n");
                     printf("-------> ");
                     scanf("%d",&choix);
