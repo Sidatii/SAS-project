@@ -396,10 +396,46 @@ printf("..............................Rechercher un produit.....................
 }
 
 void stats_ventes(){
+int chiffre_affaire_vte = 0;
+time_t h2 = time(NULL);
+struct tm tm = *localtime(&h2);
+//La somme des ventes journaliers
+chiffre_affaire_vte = 0;
+for(i=0; i<compteur; i++){
+    if(t[i].inf.d.jour==tm.tm_mday && t[i].inf.d.mois==tm.tm_mon + 1 && t[i].inf.d.annee==tm.tm_year + 1900)
+    chiffre_affaire_vte+=t[i].inf.Total_TTC;
+}
+//La moyenne des ventes
+int moyenne_vte;
+moyenne_vte = chiffre_affaire_vte/compteur;
+int max_vte, min_vte;
+max_vte=0;
+int index;
+for (int i=0 ; i<compteur ; i++){
+    if(t[i].inf.d.jour==tm.tm_mday && t[i].inf.d.mois==tm.tm_mon + 1 && t[i].inf.d.annee==tm.tm_year + 1900){
+        if(t[i].inf.Total_TTC>max_vte){
+            max_vte=t[i].inf.Total_TTC;
+            index = i;
+    }
+}
+}
 
+min_vte=0;
+int index1;
+for (int i=0 ; i<compteur ; i++){
+    if(t[i].inf.d.jour==tm.tm_mday && t[i].inf.d.mois==tm.tm_mon + 1 && t[i].inf.d.annee==tm.tm_year + 1900){
+        if(t[i].inf.Total_TTC<min_vte){
+            min_vte=t[i].inf.Total_TTC;
+            index1 = i;
+    }
+}
+}
 
-
-
+printf("Chiffre d affaire journalier: %f\n\nMoyenne vente journaliere: %f\n\n", chiffre_affaire_vte,moyenne_vte);
+printf("Le produit avec le chiffre d affaire le plus grand:\n");
+printf("\n%d\t%s\t%f\n\n",t[index].codee,t[index].inf.nom,t[index].inf.Total_TTC);
+printf("Le produit avec le chiffre d affaire le plus petit:\n");
+printf("\n%d\t%s\t%f\n\n",t[index1].codee,t[index1].inf.nom,t[index1].inf.Total_TTC);
 }
 
 void red_bg (){
@@ -655,6 +691,28 @@ int main () {
             }
 ///Etat d'inventaire*************************************************************************************************************************************************************************
         case 6:
+            system("cls");
+            printf("\n1. Statistiques des vente\n2. Statistiques des achats\n3. Retour au menu principale\n");
+            printf("-------> ");
+            scanf("%d",&choix);
+            system("cls");
+            switch(choix){
+                case 1:
+                    stats_ventes();
+                    system("cls");
+                    printf("\n1. Retour au menu principale\n");
+                    printf("-------> ");
+                    scanf("%d",&choix);
+                    system("cls");
+                        switch(choix){
+                            default:
+                                goto start1;
+                        }
+
+                default:
+                    goto start1;
+
+            }
 ///Quit program*************************************************************************************************************************************************************************
         case 7:
             printf(".....................................................................................\n"
