@@ -81,13 +81,10 @@ int j, n,choix;
 char check[100];
 int i,j;
 
-void ajoute(){
+int ajoute(){
 int n;
 start:
-
 printf("************************Ajoutez vos produits************************\n\n ");
-
-
 printf("Veuillez saisir le nombre des produits a ajouter: ");
 scanf("%d", &n);
 int temp = nb_produit;
@@ -95,9 +92,8 @@ int temp = nb_produit;
     int x;
         printf("Voulez-vous continuer cette operation?\n1. No  || 2. YES\n\n-------> ");
         scanf("%d", &x);
-            switch(x){
-                case 1: goto end;
-                default: break;}
+            if(x==1) return 0;
+
 //------------------------------------------------------------------------------------
 printf("Veuillez saisir les infos de votre produit: ");
 
@@ -119,10 +115,10 @@ printf("Veuillez saisir les infos de votre produit: ");
     system("cls");
     printf("..................Votre produit est bien enregistre..................");
     }
-    end:
+
 }
 
-void supprimer(){
+int supprimer(){
 int del_num,del_code,index;
 int n;
 start:
@@ -134,9 +130,7 @@ scanf("%d", &n);
     int x;
         printf("Voulez-vous continuer cette operation?\n1. No  || 2. YES\n\n---------> ");
         scanf("%d", &x);
-            switch(x){
-                case 1: goto end;
-                default: break;}
+            if(x==1) return 0;
 //------------------------------------------------------------------------------------
 
 for(i=0; i<n; i++){
@@ -159,8 +153,6 @@ printf("Veuillez inserer le code du produit a supprimer n %d: ",i+1);
 printf("Votre nouvelle liste s'affiche comme suit: \n");
 for (j=0; j<nb_produit;j++)
     printf("\n%d \t %s \t %d \t %f \t %f\n",s[j].codee,s[j].inf.nom,s[j].inf.qty,s[j].inf.price,s[j].inf.price_TTC);
-
-end:
 }
 
 void Approvisionnement(){
@@ -185,14 +177,27 @@ scanf("%d", &n);
 //----------------------------------------------------------------------------------------------
 if(nb_produit==0){ //La verification si la table est vide.
           printf("\n\a\033[0;41mVous avez pas encore ajoute des produits!!!\033[0m\n\nVeuillez ajouter des produit auparavant\\n\n");
-          goto end;
           }
 
 //----------------------------------------------------------------------------------------------
+
+
+
 for(i=0; i<n; i++){
         begin:
     printf("Veuillez saisir le code du produit vendu n %d: ",i+1);
     scanf("%d",&code_code);fflush(stdin);
+
+    //Recherche si le code saisi est existant.
+    for(int l=0;l<nb_produit;l++){
+        if(s[l].codee==code_code)
+            break;
+        if(l>nb_produit){
+        printf("\n\n\a\033[0;31mDesole!!! Le code saisi n existe pas dans la list des produits\033[0m\n\n");
+        goto begin;}}
+        //----------------------------------------------------------------------------------------------
+
+
     printf("Veuillez saisir la quantite vendue: ");
     scanf("%d",&qte_vendue);fflush(stdin);
         for(int m=0; m<nb_produit;m++)
@@ -203,15 +208,12 @@ for(i=0; i<n; i++){
                     printf("L etat de stock du produit ne peut pas satisfaire la quantitee saisie!!\n\n");
                     goto begin;
                 }
-                else break;
             }
             int x;
         printf("Voulez-vous vraiment effectuer cette operation?\n1. No  || 2. YES\n\n");
         scanf("%d", &x);
-            switch(x){
-                case 1: system("cls"); goto end;
-                default: break;
-            }
+            if(x==1){ system("cls"); return 0;}
+
         s[index].inf.qty -= qte_vendue;
         t[compteur].codee = s[index].codee;
         strcpy(t[compteur].inf.nom,s[index].inf.nom);
@@ -224,17 +226,17 @@ for(i=0; i<n; i++){
         t[compteur].inf.d.mois = tm.tm_mon + 1;
         t[compteur].inf.d.annee = tm.tm_year + 1900;
         compteur++;
+}
 
 
 
     printf("..................L'operation est enregistree..................\n\n");
 
-}
+
 printf("..................journal des ventes..................\n\n");
 printf("Code\tNom\tQte\tPrix HT\t        Total TTC\t        Date operation");
 for (int k=0; k<compteur;k++)
     printf("\n%d\t%s\t%d\t%f\t%f\t%d/%d/%d\n",t[k].codee,t[k].inf.nom,t[k].inf.qty,t[k].inf.prix,t[k].inf.Total_TTC,t[k].inf.d.jour,t[k].inf.d.mois,t[k].inf.d.annee);
-end:
 }
 
 void Enregistrement_achats(){
@@ -247,7 +249,7 @@ scanf("%d", &n);
 //--------------------------------------------------------------------------------------------
 if(nb_produit==0){ //La verification si la table est vide.
           printf("\n\a\033[0;41mVous avez pas encore ajoute des produits!!!\033[0m\n\nVeuillez ajouter des produit auparavant\n\n");
-          goto end;
+          return 0;
           }
 
 //--------------------------------------------------------------------------------------------
@@ -263,10 +265,8 @@ for(i=0; i<n; i++){
             int x;
         printf("Voulez-vous vraiment effectuer cette operation?\n1. No  || 2. YES\n\n");
         scanf("%d", &x);
-            switch(x){
-                case 1: system("cls"); goto end;
-                default: break;
-            }
+            if(x==1){system("cls"); return 0;}
+
         s[index].inf.qty += qte_achetee;
         a[compteur1].codee = s[index].codee;
         strcpy(a[compteur1].info.nom,s[index].inf.nom);
@@ -287,8 +287,6 @@ for(i=0; i<n; i++){
     printf("Code\tNom\tQte\tPrix HT\t        Prix TTC\t        Date operation\n");
     for (int k=0; k<compteur1;k++)
     printf("\n%d\t%s\t%d\t%f\t%f\t%d/%d/%d\n",a[k].codee,a[k].info.nom,a[k].info.qty,a[k].info.prix_TTC,a[k].info.Total,a[k].info.dt.jour,a[k].info.dt.mois,a[k].info.dt.annee);
-
-end:
 }
 
 void Ascendant_par_nom(){
@@ -396,58 +394,60 @@ printf("..............................Rechercher un produit.....................
 }
 
 void stats_ventes(){
-int chiffre_affaire_vte = 0;
-time_t h2 = time(NULL);
-struct tm tm = *localtime(&h2);
-//La somme des ventes journaliers
-chiffre_affaire_vte = 0;
-for(i=0; i<compteur; i++){
-    if(t[i].inf.d.jour==tm.tm_mday && t[i].inf.d.mois==tm.tm_mon + 1 && t[i].inf.d.annee==tm.tm_year + 1900)
-    chiffre_affaire_vte+=t[i].inf.Total_TTC;
-}
-//La moyenne des ventes
-int moyenne_vte;
-moyenne_vte = chiffre_affaire_vte/compteur;
-int max_vte, min_vte;
-max_vte=0;
-int index;
-for (int i=0 ; i<compteur ; i++){
-    if(t[i].inf.d.jour==tm.tm_mday && t[i].inf.d.mois==tm.tm_mon + 1 && t[i].inf.d.annee==tm.tm_year + 1900){
-        if(t[i].inf.Total_TTC>max_vte){
-            max_vte=t[i].inf.Total_TTC;
-            index = i;
+    float chiffre_affaire_vte = 0;
+    time_t h2 = time(NULL);
+    struct tm tm = *localtime(&h2);
+    //La somme des ventes journaliers
+    for(i=0; i<compteur; i++){
+        if(t[i].inf.d.jour==tm.tm_mday && (t[i].inf.d.mois==tm.tm_mon + 1) && (t[i].inf.d.annee==tm.tm_year + 1900))
+        chiffre_affaire_vte += t[i].inf.Total_TTC;
     }
-}
+    //La moyenne des ventes
+    float moyenne_vte;
+    moyenne_vte = chiffre_affaire_vte/compteur;
+
+    float max_vte;
+    max_vte=t[0].inf.Total_TTC;
+    int index;
+    for (int i=1 ; i<compteur ; i++){
+        if(t[i].inf.d.jour==tm.tm_mday && t[i].inf.d.mois==tm.tm_mon + 1 && t[i].inf.d.annee==tm.tm_year + 1900){
+            if(t[i].inf.Total_TTC>max_vte){
+                max_vte=t[i].inf.Total_TTC;
+                index = i;
+                break;
+            }
+        }
+    }
+    float min_vte;
+    min_vte=t[0].inf.Total_TTC;
+    int index1;
+    for (int i=1 ; i<compteur ; i++){
+        if(t[i].inf.d.jour==tm.tm_mday && t[i].inf.d.mois==tm.tm_mon + 1 && t[i].inf.d.annee==tm.tm_year + 1900){
+            if(t[i].inf.Total_TTC<min_vte){
+                min_vte=t[i].inf.Total_TTC;
+                index1 = i;
+            }
+        }
+    }
+
+    printf("Chiffre d affaire journalier: %f\n\nMoyenne vente journaliere: %f\n\n", chiffre_affaire_vte,moyenne_vte);
+    printf("Le produit avec le chiffre d affaire le plus grand:\n");
+    printf("\n%d\t%s\t%f\t%d/%d/%d\n\n",t[index].codee,t[index].inf.nom,t[index].inf.Total_TTC,t[index].inf.d.jour,t[index].inf.d.mois,t[index].inf.d.annee);
+    printf("Le produit avec le chiffre d affaire le plus bas:\n");
+    printf("\n%d\t%s\t%f\t%d/%d/%d\n\n",t[index1].codee,t[index1].inf.nom,t[index].inf.Total_TTC,t[index].inf.d.jour,t[index].inf.d.mois,t[index].inf.d.annee);
 }
 
-min_vte=0;
-int index1;
-for (int i=0 ; i<compteur ; i++){
-    if(t[i].inf.d.jour==tm.tm_mday && t[i].inf.d.mois==tm.tm_mon + 1 && t[i].inf.d.annee==tm.tm_year + 1900){
-        if(t[i].inf.Total_TTC<min_vte){
-            min_vte=t[i].inf.Total_TTC;
-            index1 = i;
-    }
-}
-}
-
-printf("Chiffre d affaire journalier: %f\n\nMoyenne vente journaliere: %f\n\n", chiffre_affaire_vte,moyenne_vte);
-printf("Le produit avec le chiffre d affaire le plus grand:\n");
-printf("\n%d\t%s\t%f\n\n",t[index].codee,t[index].inf.nom,t[index].inf.Total_TTC);
-printf("Le produit avec le chiffre d affaire le plus petit:\n");
-printf("\n%d\t%s\t%f\n\n",t[index1].codee,t[index1].inf.nom,t[index1].inf.Total_TTC);
-}
 
 void red_bg (){
   printf("\033[1;41m");
 }
 
 void yellow_bg(){
-  printf("\033[1;33m");
+  printf("\033[1;33m\n");
 }
 
 void cyan_bg(){
-  printf("\33[0;36m");
+  printf("\33[0;36m\n");
 }
 
 void reset() {
@@ -612,7 +612,7 @@ int main () {
                     ventes:
                     system("cls");
                     Enregistrement_ventes();
-                    printf("\n1. Enregistrer une ou plusieurs operations vente\n2. Afficher le journal des ventes\n4. Retour au menu principale\n");
+                    printf("\n1. Enregistrer une ou plusieurs operations vente\n2. Afficher le journal des ventes\n3. Retour au menu principale\n");
                     printf("-------> ");
                     scanf("%d",&choix);
                     system("cls");
@@ -649,7 +649,7 @@ int main () {
             system("cls");
             printf("\n1. Alimenter le stock d un ou plusieurs produit\n2. Afficher le journal des achats\n3. Retour au menu principale\n");
             printf("-------> ");
-                            scanf("%d",&choix);
+            scanf("%d",&choix);
             system("cls");
             switch(choix){
                 //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -689,17 +689,16 @@ int main () {
                     goto start1;
                     system("cls");
             }
-///Etat d'inventaire*************************************************************************************************************************************************************************
+///Statistiques des ventes*************************************************************************************************************************************************************************
         case 6:
             system("cls");
-            printf("\n1. Statistiques des vente\n2. Statistiques des achats\n3. Retour au menu principale\n");
+            printf("\n1. Statistiques des ventes\n2. Statistiques des achats\n3. Retour au menu principale\n");
             printf("-------> ");
             scanf("%d",&choix);
             system("cls");
             switch(choix){
                 case 1:
                     stats_ventes();
-                    system("cls");
                     printf("\n1. Retour au menu principale\n");
                     printf("-------> ");
                     scanf("%d",&choix);
@@ -722,7 +721,8 @@ int main () {
 ///*************************************************************************************************************************************************************************
 
 ///#########################################################################################################################################################################
-    }
+
+}
 return 0;
 }
 ///>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
