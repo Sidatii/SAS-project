@@ -89,12 +89,13 @@ printf("Veuillez saisir le nombre des produits a ajouter: ");
 scanf("%d", &n);
 int temp = nb_produit;
 //La choix d abondonner les modifications--------------------------------------------
-    int x;
-        printf("Voulez-vous continuer cette operation?\n1. No  || 2. YES\n\n-------> ");
-        scanf("%d", &x);
-            if(x==1) return 0;
+int x;
+printf("Voulez-vous continuer cette operation?\n1. No  || 2. YES\n\n-------> ");
+scanf("%d", &x);
+    if(x==1) return 0;
 
 //------------------------------------------------------------------------------------
+codeexistant:
 printf("Veuillez saisir les infos de votre produit: ");
 
  for (j=temp; j<temp+n;j++){
@@ -102,6 +103,12 @@ printf("Veuillez saisir les infos de votre produit: ");
     printf("Veuillez inserer le code de votre produit: ");
     scanf("%d",&s[j].codee);
     fflush(stdin);
+    for(i=0; i<nb_produit;i++)
+    if(s[j].codee==s[i].codee){
+        printf("\nLe code saisi exist deja dans la base des donnees\n");
+        goto codeexistant;
+    }
+    else break;
     printf("Veuillez inserer le nom du produit: ");
     scanf("%s",&s[j].inf.nom);
     printf("Veuillez inserer la quantite initiale: ");
@@ -134,8 +141,14 @@ scanf("%d", &n);
             if(x==1) return 0;
 //------------------------------------------------------------------------------------
 for(i=0; i<n; i++){
+codenonxistant:
 printf("Veuillez inserer le code du produit a supprimer n %d: ",i+1);
     scanf("%d",&del_code);fflush(stdin);
+    for(j=0; j<nb_produit;j++){
+    if(s[j].codee!=del_code){
+        printf("\nLe code saisi n exist pas dans la base des donnees\n");
+        goto codenonxistant;}
+    }
  for (j=0; j<nb_produit;j++){
 
     if(s[j].codee==del_code){
